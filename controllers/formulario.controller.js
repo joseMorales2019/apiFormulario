@@ -1,18 +1,19 @@
 import Formulario from '../models/formulario.model.js';
 import XLSX from 'xlsx';
+
 // Crear nuevo formulario
-exports.crearFormulario = async (req, res) => {
+export const crearFormulario = async (req, res) => {
   try {
     const nuevoFormulario = new Formulario(req.body);
     const resultado = await nuevoFormulario.save();
     res.status(201).json(resultado);
   } catch (error) {
-    res.status(400).json({ error: 'Error al crear el formulario', detalle: error });
+    res.status(400).json({ error: 'Error al crear el formulario', detalle: error.message });
   }
 };
 
 // Obtener todos los formularios
-exports.obtenerFormularios = async (req, res) => {
+export const obtenerFormularios = async (req, res) => {
   try {
     const formularios = await Formulario.find();
     res.json(formularios);
@@ -22,7 +23,7 @@ exports.obtenerFormularios = async (req, res) => {
 };
 
 // Obtener un formulario por ID
-exports.obtenerFormularioPorId = async (req, res) => {
+export const obtenerFormularioPorId = async (req, res) => {
   try {
     const formulario = await Formulario.findById(req.params.id);
     if (!formulario) return res.status(404).json({ error: 'Formulario no encontrado' });
@@ -33,7 +34,7 @@ exports.obtenerFormularioPorId = async (req, res) => {
 };
 
 // Actualizar formulario
-exports.actualizarFormulario = async (req, res) => {
+export const actualizarFormulario = async (req, res) => {
   try {
     const actualizado = await Formulario.findByIdAndUpdate(
       req.params.id,
@@ -48,7 +49,7 @@ exports.actualizarFormulario = async (req, res) => {
 };
 
 // Eliminar formulario
-exports.eliminarFormulario = async (req, res) => {
+export const eliminarFormulario = async (req, res) => {
   try {
     const eliminado = await Formulario.findByIdAndDelete(req.params.id);
     if (!eliminado) return res.status(404).json({ error: 'Formulario no encontrado' });
@@ -58,9 +59,8 @@ exports.eliminarFormulario = async (req, res) => {
   }
 };
 
-
-// Crea formulario a partir de archivo Excel
-exports.crearDesdeExcel = async (req, res) => {
+// Crear formulario a partir de archivo Excel
+export const crearDesdeExcel = async (req, res) => {
   try {
     const buffer = req.file.buffer;
     const workbook = XLSX.read(buffer, { type: 'buffer' });
@@ -92,5 +92,3 @@ exports.crearDesdeExcel = async (req, res) => {
     res.status(400).json({ error: 'No se pudo procesar el archivo' });
   }
 };
-
-export default controlador;
