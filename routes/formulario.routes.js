@@ -4,11 +4,14 @@ import upload from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
+// Rutas específicas primero
+router.post('/upload', upload.single('archivo'), controlador.crearDesdeExcel);
+
+// Rutas CRUD
 router.post('/', controlador.crearFormulario);
 router.get('/', controlador.obtenerFormularios);
 router.get('/:id', controlador.obtenerFormularioPorId);
 router.put('/:id', controlador.actualizarFormulario);
 router.delete('/:id', controlador.eliminarFormulario);
-router.post('/upload', upload.single('archivo'), controlador.crearDesdeExcel);
 
 export default router;
