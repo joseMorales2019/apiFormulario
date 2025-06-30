@@ -3,7 +3,11 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+
+
 import respuestaRoutes from './routes/respuesta.routes.js';
+
+
 
 
 
@@ -24,10 +28,13 @@ const app = express();
 connectDB(); // Si ya conectas en db.js, puedes quitar mongoose.connect aquí
 
 // Middlewares
-app.use(cors());
 app.use(express.json());
 
-
+app.use(cors({
+  origin: 'https://josemanuelmoralesmejia-b7df8.web.app', // o '*'
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use('/api/respuestas', respuestaRoutes);
 // Rutas
