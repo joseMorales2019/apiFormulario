@@ -1,3 +1,6 @@
+// models/User.js
+import mongoose from 'mongoose';
+
 const campoSchema = new mongoose.Schema({
   etiqueta: String,
   tipo: String,

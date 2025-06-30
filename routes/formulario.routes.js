@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import controlador from '../controllers/formulario.controller.js';
+import upload from '../middlewares/upload.middleware.js';
+
 const router = express.Router();
-const controlador = require('../controllers/formulario.controller');
-const upload = require('../middlewares/upload.middleware');
 
 router.post('/', controlador.crearFormulario);
 router.get('/', controlador.obtenerFormularios);
@@ -12,4 +13,4 @@ router.delete('/:id', controlador.eliminarFormulario);
 // 📥 Subida de archivo Excel
 router.post('/upload', upload.single('archivo'), controlador.crearDesdeExcel);
 
-module.exports = router;
+export default router;

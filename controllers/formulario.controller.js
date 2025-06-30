@@ -92,3 +92,5 @@ exports.crearDesdeExcel = async (req, res) => {
     res.status(400).json({ error: 'No se pudo procesar el archivo' });
   }
 };
+
+export default controlador;
