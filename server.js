@@ -11,7 +11,7 @@ dotenv.config();
 // Importaciones locales
 import connectDB from './config/db.js';
 import formularioRoutes from './routes/formulario.routes.js';
-import authRoutes from './routes/auth.routes.js'; // Asegúrate de tener este archivo
+
 
 // Inicializar app
 const app = express();
