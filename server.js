@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+import respuestaRoutes from './routes/respuesta.routes.js';
+
+
+
 
 
 // Cargar configuración
@@ -25,6 +29,7 @@ app.use(express.json());
 
 
 
+app.use('/api/respuestas', respuestaRoutes);
 // Rutas
 app.use('/api/formularios', formularioRoutes);
 
