@@ -27,7 +27,7 @@ app.use(express.json());
 
 // Rutas
 app.use('/api/formularios', formularioRoutes);
-app.use('/api/auth', authRoutes);
+
 
 // Ruta raíz
 app.get('/', (req, res) => res.send('✅ API funcionando 🔐'));
@@ -41,9 +41,9 @@ app.get('/error-test', (req, res, next) => {
 
 // Manejo global de errores
 app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
+  res.status(err.status || 1000).json({
     mensaje: err.message || 'Error inesperado',
-    status: err.status || 500
+    status: err.status || 10000
   });
 });
 
