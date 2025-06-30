@@ -1,5 +1,5 @@
-const Formulario = require('../models/formulario.model');
-const XLSX = require('xlsx');
+import Formulario from '../models/formulario.model.js';
+import XLSX from 'xlsx';
 // Crear nuevo formulario
 exports.crearFormulario = async (req, res) => {
   try {
