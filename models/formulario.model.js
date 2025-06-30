@@ -1,4 +1,3 @@
-// models/User.js
 import mongoose from 'mongoose';
 
 const campoSchema = new mongoose.Schema({
@@ -12,6 +11,15 @@ const campoSchema = new mongoose.Schema({
   placeholder: String,
   ayuda: String
 });
-const Formulario = mongoose.model('Formulario', campoSchema);
+
+// El formulario tiene muchos campos
+const formularioSchema = new mongoose.Schema({
+  nombre: String,
+  descripcion: String,
+  campos: [campoSchema],
+  creadoEn: { type: Date, default: Date.now }
+});
+
+const Formulario = mongoose.model('Formulario', formularioSchema);
 
 export default Formulario;
