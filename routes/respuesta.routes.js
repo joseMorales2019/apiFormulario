@@ -4,7 +4,7 @@ import { enviarRespuestas, obtenerMisRespuestas } from '../controllers/respuesta
 
 const router = express.Router();
 
-router.post('/', verificarToken, enviarRespuestas);         // POST /api/respuestas
-router.get('/mias', verificarToken, obtenerMisRespuestas);  // GET  /api/respuestas/mias
+router.post('/', enviarRespuestas);         // POST /api/respuestas
+router.get('/mias', obtenerMisRespuestas);  // GET  /api/respuestas/mias
 
 export default router;
