@@ -2,7 +2,7 @@
 import Formulario from '../models/formulario.model.js';
 import XLSX from 'xlsx';
 
-// Crear nuevo formulario
+// 🎯 Crear nuevo formulario
 export const crearFormulario = async (req, res) => {
   try {
     const nuevoFormulario = new Formulario(req.body);
@@ -13,7 +13,7 @@ export const crearFormulario = async (req, res) => {
   }
 };
 
-// Obtener todos los formularios
+// 📋 Obtener todos los formularios
 export const obtenerFormularios = async (req, res) => {
   try {
     const formularios = await Formulario.find();
@@ -23,7 +23,7 @@ export const obtenerFormularios = async (req, res) => {
   }
 };
 
-// Obtener un formulario por ID
+// 🔍 Obtener un formulario por ID
 export const obtenerFormularioPorId = async (req, res) => {
   try {
     const formulario = await Formulario.findById(req.params.id);
@@ -34,66 +34,71 @@ export const obtenerFormularioPorId = async (req, res) => {
   }
 };
 
-// Actualizar formulario
+// 🛠️ Actualizar un formulario
 export const actualizarFormulario = async (req, res) => {
   try {
-    const actualizado = await Formulario.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const actualizado = await Formulario.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!actualizado) return res.status(404).json({ error: 'Formulario no encontrado' });
     res.json(actualizado);
   } catch (error) {
-    res.status(400).json({ error: 'Error al actualizar formulario' });
+    res.status(400).json({ error: 'Error al actualizar formulario', detalle: error.message });
   }
 };
 
-// Eliminar formulario
+// ❌ Eliminar formulario
 export const eliminarFormulario = async (req, res) => {
   try {
     const eliminado = await Formulario.findByIdAndDelete(req.params.id);
     if (!eliminado) return res.status(404).json({ error: 'Formulario no encontrado' });
     res.json({ mensaje: 'Formulario eliminado correctamente' });
   } catch (error) {
-    res.status(400).json({ error: 'Error al eliminar formulario' });
+    res.status(400).json({ error: 'Error al eliminar formulario', detalle: error.message });
   }
 };
 
-// Crear formulario desde archivo Excel
+// 📤 Crear formulario desde archivo Excel
 export const crearDesdeExcel = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No se recibió ningún archivo' });
     }
 
-    const buffer = req.file.buffer;
-    const workbook = XLSX.read(buffer, { type: 'buffer' });
+    const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
     const hoja = workbook.Sheets[workbook.SheetNames[0]];
     const jsonCampos = XLSX.utils.sheet_to_json(hoja);
 
-    const campos = jsonCampos.map(campo => ({
-      etiqueta: campo['etiqueta'],
-      tipo: campo['tipo'],
+    // Validación mínima
+    if (!Array.isArray(jsonCampos) || jsonCampos.length === 0) {
+      return res.status(400).json({ error: 'El archivo Excel está vacío o mal formado' });
+    }
+
+    const campos = jsonCampos.map((campo, index) => ({
+      etiqueta: campo['etiqueta'] || `Campo ${index + 1}`,
+      tipo: campo['tipo'] || 'texto',
       obligatorio: campo['obligatorio']?.toString().toLowerCase() === 'sí',
-      opciones: campo['opciones']?.split(',').map(op => op.trim()) || [],
-      min: campo['min'] || null,
-      max: campo['max'] || null,
-      pattern: campo['pattern'] || null,
+      opciones: typeof campo['opciones'] === 'string'
+        ? campo['opciones'].split(',').map(op => op.trim())
+        : [],
+      min: campo['min'] !== undefined ? Number(campo['min']) : undefined,
+      max: campo['max'] !== undefined ? Number(campo['max']) : undefined,
+      pattern: campo['pattern'] || '',
       placeholder: campo['placeholder'] || '',
       ayuda: campo['ayuda'] || ''
     }));
 
     const nuevoFormulario = new Formulario({
       nombre: 'Formulario generado desde Excel',
-      descripcion: 'Este formulario fue creado automáticamente',
+      descripcion: 'Este formulario fue creado automáticamente desde un archivo .xlsx',
       campos
     });
 
     const resultado = await nuevoFormulario.save();
-    res.status(201).json(resultado);
+    res.status(201).json({
+      mensaje: 'Formulario creado exitosamente desde Excel',
+      formulario: resultado
+    });
   } catch (error) {
-    console.error('Error al procesar el Excel:', error);
+    console.error('❌ Error al procesar el Excel:', error);
     res.status(400).json({ error: 'No se pudo procesar el archivo', detalle: error.message });
   }
 };
