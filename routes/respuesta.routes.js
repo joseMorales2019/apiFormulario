@@ -1,6 +1,6 @@
 import express from 'express';
 import { enviarRespuestas, obtenerMisRespuestas } from '../controllers/respuesta.controller.js';
-import { verificarToken } from '../middlewares/auth.middleware.js';
+
 
 const router = express.Router();
 
