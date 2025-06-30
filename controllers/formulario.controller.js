@@ -1,3 +1,4 @@
+// controllers/formulario.controller.js
 import Formulario from '../models/formulario.model.js';
 import XLSX from 'xlsx';
 
@@ -59,9 +60,13 @@ export const eliminarFormulario = async (req, res) => {
   }
 };
 
-// Crear formulario a partir de archivo Excel
+// Crear formulario desde archivo Excel
 export const crearDesdeExcel = async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No se recibió ningún archivo' });
+    }
+
     const buffer = req.file.buffer;
     const workbook = XLSX.read(buffer, { type: 'buffer' });
     const hoja = workbook.Sheets[workbook.SheetNames[0]];
@@ -70,7 +75,7 @@ export const crearDesdeExcel = async (req, res) => {
     const campos = jsonCampos.map(campo => ({
       etiqueta: campo['etiqueta'],
       tipo: campo['tipo'],
-      obligatorio: campo['obligatorio']?.toLowerCase() === 'sí',
+      obligatorio: campo['obligatorio']?.toString().toLowerCase() === 'sí',
       opciones: campo['opciones']?.split(',').map(op => op.trim()) || [],
       min: campo['min'] || null,
       max: campo['max'] || null,
@@ -89,6 +94,6 @@ export const crearDesdeExcel = async (req, res) => {
     res.status(201).json(resultado);
   } catch (error) {
     console.error('Error al procesar el Excel:', error);
-    res.status(400).json({ error: 'No se pudo procesar el archivo' });
+    res.status(400).json({ error: 'No se pudo procesar el archivo', detalle: error.message });
   }
 };

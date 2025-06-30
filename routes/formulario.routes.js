@@ -1,3 +1,4 @@
+// routes/formulario.routes.js
 import express from 'express';
 import {
   crearFormulario,
@@ -11,14 +12,14 @@ import upload from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
-// Rutas REST
+// Ruta para subida de Excel (debe ir antes que /:id)
+router.post('/upload', upload.single('archivo'), crearDesdeExcel);
+
+// Rutas CRUD
 router.post('/', crearFormulario);
 router.get('/', obtenerFormularios);
 router.get('/:id', obtenerFormularioPorId);
 router.put('/:id', actualizarFormulario);
 router.delete('/:id', eliminarFormulario);
-
-// Subida de archivo Excel
-router.post('/upload', upload.single('archivo'), crearDesdeExcel);
 
 export default router;
