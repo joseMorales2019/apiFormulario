@@ -12,4 +12,6 @@ const campoSchema = new mongoose.Schema({
   placeholder: String,
   ayuda: String
 });
-export default mongoose.model('formulario', userSchema);
+const Formulario = mongoose.model('Formulario', formularioSchema);
+
+export default Formulario;
