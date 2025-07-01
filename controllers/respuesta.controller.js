@@ -1,27 +1,26 @@
 // 📄 respuesta.controller.js
-import {
-  obtenerMisRespuestas,
-  actualizarRespuesta,
-  actualizarRespuestasSeleccionadas,
-  eliminarRespuesta,
-  eliminarRespuestasSeleccionadas
-} from '../controllers/respuesta.controller.js';
+import RespuestaFormulario from '../models/respuestaFormulario.model.js';
 
+// ✅ Crear nueva respuesta (faltaba el export)
+export const enviarRespuestas = async (req, res) => {
   try {
     const { formularioId, respuestas } = req.body;
     const usuarioId = req.user.id;
+
     const nuevaRespuesta = new RespuestaFormulario({
       usuario: usuarioId,
       formulario: formularioId,
       respuestas
     });
+
     const guardado = await nuevaRespuesta.save();
     res.status(201).json(guardado);
   } catch (error) {
     res.status(500).json({ error: 'Error al guardar respuestas', detalle: error.message });
   }
+};
 
-
+// ✅ Obtener respuestas del usuario autenticado
 export const obtenerMisRespuestas = async (req, res) => {
   try {
     const respuestas = await RespuestaFormulario.find({ usuario: req.user.id }).populate('formulario');
@@ -31,6 +30,7 @@ export const obtenerMisRespuestas = async (req, res) => {
   }
 };
 
+// ✅ Actualizar una sola respuesta
 export const actualizarRespuesta = async (req, res) => {
   try {
     const actualizada = await RespuestaFormulario.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -41,11 +41,14 @@ export const actualizarRespuesta = async (req, res) => {
   }
 };
 
+// ✅ Actualizar múltiples respuestas
 export const actualizarRespuestasSeleccionadas = async (req, res) => {
   try {
-    const { respuestas } = req.body; // [{id, datos}]
+    const { respuestas } = req.body; // [{ id, datos }]
     const actualizadas = await Promise.all(
-      respuestas.map(r => RespuestaFormulario.findByIdAndUpdate(r.id, r.datos, { new: true }))
+      respuestas.map(r =>
+        RespuestaFormulario.findByIdAndUpdate(r.id, r.datos, { new: true })
+      )
     );
     res.json(actualizadas);
   } catch (error) {
@@ -53,6 +56,7 @@ export const actualizarRespuestasSeleccionadas = async (req, res) => {
   }
 };
 
+// ✅ Eliminar una respuesta
 export const eliminarRespuesta = async (req, res) => {
   try {
     const eliminada = await RespuestaFormulario.findByIdAndDelete(req.params.id);
@@ -63,6 +67,7 @@ export const eliminarRespuesta = async (req, res) => {
   }
 };
 
+// ✅ Eliminar múltiples respuestas
 export const eliminarRespuestasSeleccionadas = async (req, res) => {
   try {
     const { ids } = req.body;
