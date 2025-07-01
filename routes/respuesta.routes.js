@@ -1,5 +1,6 @@
 // 📄 respuesta.routes.js
 import express from 'express';
+import authMiddleware from '../middlewares/auth.middleware.js';
 import {
   enviarRespuestas,
   obtenerMisRespuestas,
@@ -11,10 +12,12 @@ import {
 
 const router = express.Router();
 
-router.post('/', enviarRespuestas);
-router.get('/mias', obtenerMisRespuestas);
-router.put('/:id', actualizarRespuesta);
-router.put('/actualizar-seleccionadas', actualizarRespuestasSeleccionadas);
-router.delete('/:id', eliminarRespuesta);
-router.post('/eliminar-seleccionadas', eliminarRespuestasSeleccionadas);
+// Todas las rutas protegidas con authMiddleware para validar token
+router.post('/', authMiddleware, enviarRespuestas);
+router.get('/mias', authMiddleware, obtenerMisRespuestas);
+router.put('/:id', authMiddleware, actualizarRespuesta);
+router.put('/actualizar-seleccionadas', authMiddleware, actualizarRespuestasSeleccionadas);
+router.delete('/:id', authMiddleware, eliminarRespuesta);
+router.post('/eliminar-seleccionadas', authMiddleware, eliminarRespuestasSeleccionadas);
+
 export default router;
