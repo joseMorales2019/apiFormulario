@@ -1,6 +1,6 @@
 import XLSX from 'xlsx';
 import Formulario from '../models/formulario.model.js';
-import User from '../models/user.model.js'; // Asegúrate que exista este modelo
+
 
 // Crear nuevo formulario (antes llamado nuevoFormulario en rutas)
 export const nuevoFormulario = async (req, res) => {
