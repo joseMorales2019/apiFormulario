@@ -1,7 +1,7 @@
 // 📄 formulario.routes.js
 import express from 'express';
 import {
-  crearFormulario,
+  nuevoFormulario,
   obtenerFormularios,
   obtenerFormularioPorId,
   actualizarFormulario,
@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.post('/upload', upload.single('archivo'), crearDesdeExcel);
 router.post('/asignar', asignarFormularios);
-router.post('/', crearFormulario);
+router.post('/', nuevoFormulario);
 router.get('/', obtenerFormularios);
 router.get('/:id', obtenerFormularioPorId);
 router.put('/:id', actualizarFormulario);
