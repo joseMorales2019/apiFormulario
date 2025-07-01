@@ -12,7 +12,7 @@
   } catch (error) {
     res.status(500).json({ error: 'Error al guardar respuestas', detalle: error.message });
   }
-};
+
 
 export const obtenerMisRespuestas = async (req, res) => {
   try {
