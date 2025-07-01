@@ -8,13 +8,13 @@ import {
   eliminarRespuestasSeleccionadas,
   actualizarRespuestasSeleccionadas
 } from '../controllers/respuesta.controller.js';
-import authMiddleware from '../middlewares/auth.middleware.js';
+
 const router = express.Router();
 
-router.post('/', authMiddleware, enviarRespuestas);
-router.get('/mias', authMiddleware, obtenerMisRespuestas);
-router.put('/:id', authMiddleware, actualizarRespuesta);
-router.put('/actualizar-seleccionadas', authMiddleware, actualizarRespuestasSeleccionadas);
-router.delete('/:id', authMiddleware, eliminarRespuesta);
-router.post('/eliminar-seleccionadas', authMiddleware, eliminarRespuestasSeleccionadas);
+router.post('/', enviarRespuestas);
+router.get('/mias', obtenerMisRespuestas);
+router.put('/:id', actualizarRespuesta);
+router.put('/actualizar-seleccionadas', actualizarRespuestasSeleccionadas);
+router.delete('/:id', eliminarRespuesta);
+router.post('/eliminar-seleccionadas', eliminarRespuestasSeleccionadas);
 export default router;
