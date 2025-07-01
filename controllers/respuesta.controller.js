@@ -1,4 +1,12 @@
 // 📄 respuesta.controller.js
+import {
+  obtenerMisRespuestas,
+  actualizarRespuesta,
+  actualizarRespuestasSeleccionadas,
+  eliminarRespuesta,
+  eliminarRespuestasSeleccionadas
+} from '../controllers/respuesta.controller.js';
+
   try {
     const { formularioId, respuestas } = req.body;
     const usuarioId = req.user.id;
