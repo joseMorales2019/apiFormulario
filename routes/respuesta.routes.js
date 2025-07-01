@@ -1,35 +1,20 @@
+// 📄 respuesta.routes.js
 import express from 'express';
-router.post('/respuestas', authMiddleware, async (req, res) => {
-  const { usuarioId, formularioId, respuestas } = req.body;
+import {
+  enviarRespuestas,
+  obtenerMisRespuestas,
+  actualizarRespuesta,
+  eliminarRespuesta,
+  eliminarRespuestasSeleccionadas,
+  actualizarRespuestasSeleccionadas
+} from '../controllers/respuesta.controller.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
+const router = express.Router();
 
-  if (!usuarioId || !formularioId || !Array.isArray(respuestas)) {
-    return res.status(400).json({ mensaje: 'Datos incompletos' });
-  }
-
-  try {
-    const usuario = await User.findById(usuarioId);
-
-    if (!usuario) {
-      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-    }
-
-    const formularioAsignado = usuario.formulariosAsignados.find(f =>
-      f.formularioId.toString() === formularioId.toString()
-    );
-
-    if (!formularioAsignado) {
-      return res.status(404).json({ mensaje: 'Formulario no asignado a este usuario' });
-    }
-
-    formularioAsignado.respuestas = respuestas; // 💾 Se almacenan las respuestas
-    await usuario.save();
-
-    return res.status(200).json({ mensaje: 'Respuestas guardadas con éxito' });
-  } catch (error) {
-    console.error('Error al guardar respuestas:', error);
-    return res.status(500).json({ mensaje: 'Error al guardar respuestas' });
-  }
-});
-
+router.post('/', authMiddleware, enviarRespuestas);
+router.get('/mias', authMiddleware, obtenerMisRespuestas);
+router.put('/:id', authMiddleware, actualizarRespuesta);
+router.put('/actualizar-seleccionadas', authMiddleware, actualizarRespuestasSeleccionadas);
+router.delete('/:id', authMiddleware, eliminarRespuesta);
+router.post('/eliminar-seleccionadas', authMiddleware, eliminarRespuestasSeleccionadas);
 export default router;
-

@@ -1,33 +1,26 @@
-// routes/formulario.routes.js
+// 📄 formulario.routes.js
 import express from 'express';
 import {
   crearFormulario,
   obtenerFormularios,
   obtenerFormularioPorId,
   actualizarFormulario,
+  actualizarFormulariosSeleccionados,
   eliminarFormulario,
-  crearDesdeExcel
+  eliminarFormulariosSeleccionados,
+  crearDesdeExcel,
+  asignarFormularios
 } from '../controllers/formulario.controller.js';
 import upload from '../middlewares/upload.middleware.js';
-
 const router = express.Router();
 
-// 📤 Importar formularios desde Excel (debe ir antes de las rutas con /:id)
 router.post('/upload', upload.single('archivo'), crearDesdeExcel);
-
-// 📦 Crear un nuevo formulario
+router.post('/asignar', asignarFormularios);
 router.post('/', crearFormulario);
-
-// 📄 Obtener todos los formularios
 router.get('/', obtenerFormularios);
-
-// 🔍 Obtener un formulario por ID
 router.get('/:id', obtenerFormularioPorId);
-
-//✏️ Actualizar un formulario existente
 router.put('/:id', actualizarFormulario);
-
-// ❌ Eliminar un formulario
+router.put('/actualizar-seleccionados', actualizarFormulariosSeleccionados);
 router.delete('/:id', eliminarFormulario);
-
+router.post('/eliminar-seleccionados', eliminarFormulariosSeleccionados);
 export default router;

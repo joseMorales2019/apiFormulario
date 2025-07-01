@@ -1,3 +1,4 @@
+// 📄 respuestaFormulario.model.js actualizado
 import mongoose from 'mongoose';
 
 const respuestaSchema = new mongoose.Schema({
@@ -5,11 +6,17 @@ const respuestaSchema = new mongoose.Schema({
   formulario: { type: mongoose.Schema.Types.ObjectId, ref: 'Formulario', required: true },
   respuestas: [
     {
-      etiqueta: String,
+      etiqueta: { type: String, required: true },
       valor: mongoose.Schema.Types.Mixed
     }
   ],
-  fechaEnvio: { type: Date, default: Date.now }
+  fechaEnvio: { type: Date, default: Date.now },
+  actualizadoEn: { type: Date, default: Date.now }
+});
+
+respuestaSchema.pre('save', function (next) {
+  this.actualizadoEn = Date.now();
+  next();
 });
 
 const RespuestaFormulario = mongoose.model('RespuestaFormulario', respuestaSchema);
