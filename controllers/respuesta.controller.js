@@ -1,4 +1,3 @@
-// 📄 respuesta.controller.js
 import RespuestaFormulario from '../models/respuestaFormulario.model.js';
 
 // ✅ Crear nueva respuesta (faltaba el export)
@@ -16,7 +15,8 @@ export const enviarRespuestas = async (req, res) => {
     const guardado = await nuevaRespuesta.save();
     res.status(201).json(guardado);
   } catch (error) {
-    res.status(500).json({ error: 'Error al guardar respuestas', detalle: error.message });
+    console.error(`[enviarRespuestas] Error al guardar respuestas:`, error.message, error.stack);
+    res.status(500).json({ error: 'Error al guardar respuestas', detalle: error.message, origen: 'enviarRespuestas' });
   }
 };
 
@@ -26,7 +26,8 @@ export const obtenerMisRespuestas = async (req, res) => {
     const respuestas = await RespuestaFormulario.find({ usuario: req.user.id }).populate('formulario');
     res.json(respuestas);
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener respuestas' });
+    console.error(`[obtenerMisRespuestas] Error al obtener respuestas:`, error.message, error.stack);
+    res.status(500).json({ error: 'Error al obtener respuestas', origen: 'obtenerMisRespuestas' });
   }
 };
 
@@ -34,10 +35,14 @@ export const obtenerMisRespuestas = async (req, res) => {
 export const actualizarRespuesta = async (req, res) => {
   try {
     const actualizada = await RespuestaFormulario.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!actualizada) return res.status(404).json({ error: 'Respuesta no encontrada' });
+    if (!actualizada) {
+      console.warn(`[actualizarRespuesta] Respuesta no encontrada: ID=${req.params.id}`);
+      return res.status(404).json({ error: 'Respuesta no encontrada', origen: 'actualizarRespuesta' });
+    }
     res.json(actualizada);
   } catch (error) {
-    res.status(400).json({ error: 'Error al actualizar respuesta', detalle: error.message });
+    console.error(`[actualizarRespuesta] Error al actualizar respuesta:`, error.message, error.stack);
+    res.status(400).json({ error: 'Error al actualizar respuesta', detalle: error.message, origen: 'actualizarRespuesta' });
   }
 };
 
@@ -52,7 +57,8 @@ export const actualizarRespuestasSeleccionadas = async (req, res) => {
     );
     res.json(actualizadas);
   } catch (error) {
-    res.status(500).json({ error: 'Error al actualizar respuestas seleccionadas' });
+    console.error(`[actualizarRespuestasSeleccionadas] Error al actualizar respuestas seleccionadas:`, error.message, error.stack);
+    res.status(500).json({ error: 'Error al actualizar respuestas seleccionadas', origen: 'actualizarRespuestasSeleccionadas' });
   }
 };
 
@@ -60,10 +66,14 @@ export const actualizarRespuestasSeleccionadas = async (req, res) => {
 export const eliminarRespuesta = async (req, res) => {
   try {
     const eliminada = await RespuestaFormulario.findByIdAndDelete(req.params.id);
-    if (!eliminada) return res.status(404).json({ error: 'Respuesta no encontrada' });
+    if (!eliminada) {
+      console.warn(`[eliminarRespuesta] Respuesta no encontrada: ID=${req.params.id}`);
+      return res.status(404).json({ error: 'Respuesta no encontrada', origen: 'eliminarRespuesta' });
+    }
     res.json({ mensaje: 'Respuesta eliminada' });
   } catch (error) {
-    res.status(400).json({ error: 'Error al eliminar respuesta' });
+    console.error(`[eliminarRespuesta] Error al eliminar respuesta:`, error.message, error.stack);
+    res.status(400).json({ error: 'Error al eliminar respuesta', origen: 'eliminarRespuesta' });
   }
 };
 
@@ -74,6 +84,7 @@ export const eliminarRespuestasSeleccionadas = async (req, res) => {
     const resultado = await RespuestaFormulario.deleteMany({ _id: { $in: ids } });
     res.json({ mensaje: 'Respuestas eliminadas', resultado });
   } catch (error) {
-    res.status(400).json({ error: 'Error al eliminar respuestas seleccionadas' });
+    console.error(`[eliminarRespuestasSeleccionadas] Error al eliminar respuestas seleccionadas:`, error.message, error.stack);
+    res.status(400).json({ error: 'Error al eliminar respuestas seleccionadas', origen: 'eliminarRespuestasSeleccionadas' });
   }
 };
