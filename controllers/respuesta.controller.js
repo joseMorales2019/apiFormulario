@@ -1,4 +1,8 @@
 import RespuestaFormulario from '../models/respuestaFormulario.model.js';
+import '../models/user.model.js';
+import '../models/formulario.model.js';
+
+
 
 // ✅ Crear nueva respuesta (faltaba el export)
 export const enviarRespuestas = async (req, res) => {
