@@ -10,6 +10,9 @@ import {
   actualizarRespuestasSeleccionadas
 } from '../controllers/respuesta.controller.js';
 
+import { obtenerTodasLasRespuestas } from '../controllers/respuesta.controller.js';
+
+
 const router = express.Router();
 
 // Todas las rutas protegidas con authMiddleware para validar token
@@ -19,5 +22,11 @@ router.put('/:id', authMiddleware, actualizarRespuesta);
 router.put('/actualizar-seleccionadas', authMiddleware, actualizarRespuestasSeleccionadas);
 router.delete('/:id', authMiddleware, eliminarRespuesta);
 router.post('/eliminar-seleccionadas', authMiddleware, eliminarRespuestasSeleccionadas);
+
+
+
+router.get('/', authMiddleware, obtenerTodasLasRespuestas); // GET /api/respuestas
+
+
 
 export default router;

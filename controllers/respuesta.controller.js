@@ -88,3 +88,19 @@ export const eliminarRespuestasSeleccionadas = async (req, res) => {
     res.status(400).json({ error: 'Error al eliminar respuestas seleccionadas', origen: 'eliminarRespuestasSeleccionadas' });
   }
 };
+
+// ✅ Obtener TODAS las respuestas (para administradores)
+export const obtenerTodasLasRespuestas = async (req, res) => {
+  try {
+    // Verificación opcional: solo admins
+    if (req.user.rol !== 'admin') {
+      return res.status(403).json({ error: 'Acceso denegado: solo administradores' });
+    }
+
+    const respuestas = await RespuestaFormulario.find().populate('formulario usuario');
+    res.json(respuestas);
+  } catch (error) {
+    console.error(`[obtenerTodasLasRespuestas] Error:`, error.message, error.stack);
+    res.status(500).json({ error: 'Error al obtener todas las respuestas', origen: 'obtenerTodasLasRespuestas' });
+  }
+};
