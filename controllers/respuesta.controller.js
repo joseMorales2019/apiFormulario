@@ -80,3 +80,22 @@ export const actualizarRespuestasSeleccionadas = async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar respuestas seleccionadas', detalle: error.message });
   }
 };
+// Eliminar múltiples respuestas seleccionadas
+export const eliminarRespuestasSeleccionadas = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Debe enviar un array no vacío de IDs para eliminar.' });
+    }
+    const resultado = await RespuestaFormulario.deleteMany({
+      _id: { $in: ids },
+      tenantId: req.user.tenantId
+    });
+    res.json({
+      mensaje: 'Respuestas eliminadas correctamente',
+      eliminados: resultado.deletedCount
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al eliminar respuestas', detalle: error.message });
+  }
+};

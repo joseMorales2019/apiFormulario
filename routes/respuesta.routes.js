@@ -7,7 +7,7 @@ import {
   eliminarRespuesta,
   eliminarRespuestasSeleccionadas,
   actualizarRespuestasSeleccionadas,
-  obtenerTodasLasRespuestas // ✅ ahora todo está en una sola importación
+  obtenerTodasLasRespuestas
 } from '../controllers/respuesta.controller.js';
 
 const router = express.Router();
