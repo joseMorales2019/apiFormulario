@@ -1,4 +1,3 @@
-// 📄 formulario.model.js actualizado
 import mongoose from 'mongoose';
 
 const campoSchema = new mongoose.Schema({
@@ -14,6 +13,7 @@ const campoSchema = new mongoose.Schema({
 });
 
 const formularioSchema = new mongoose.Schema({
+  tenantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Tenant', required: true, index: true },
   nombre: { type: String, required: true },
   descripcion: String,
   campos: [campoSchema],
@@ -26,5 +26,4 @@ formularioSchema.pre('save', function (next) {
   next();
 });
 
-const Formulario = mongoose.model('Formulario', formularioSchema);
-export default Formulario;
+export default mongoose.model('Formulario', formularioSchema);
