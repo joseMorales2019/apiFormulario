@@ -66,7 +66,6 @@ export const eliminarFormulario = async (req, res) => {
 export const crearDesdeExcel = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'Archivo requerido' });
-
     const wb = XLSX.read(req.file.buffer, { type: 'buffer' });
     const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
     if (!rows.length) return res.status(400).json({ error: 'Excel vacío' });
@@ -101,6 +100,9 @@ export const crearDesdeExcel = async (req, res) => {
 export const actualizarFormulariosSeleccionados = async (req, res) => {
   try {
     const formularios = req.body; // [{ _id, ... }]
+    if (!Array.isArray(formularios) || formularios.length === 0) {
+      return res.status(400).json({ error: 'Debe enviar un array no vacío de formularios para actualizar.' });
+    }
     const updates = formularios.map(f =>
       Formulario.findOneAndUpdate(
         { _id: f._id, tenantId: req.user.tenantId },
@@ -119,6 +121,9 @@ export const actualizarFormulariosSeleccionados = async (req, res) => {
 export const eliminarFormulariosSeleccionados = async (req, res) => {
   try {
     const { ids } = req.body;
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'Debe enviar un array no vacío de IDs para eliminar.' });
+    }
     const resultado = await Formulario.deleteMany({
       _id: { $in: ids },
       tenantId: req.user.tenantId
@@ -136,13 +141,12 @@ export const eliminarFormulariosSeleccionados = async (req, res) => {
 export const asignarFormularios = async (req, res) => {
   try {
     const { formularioIds = [], usuarioIds = [] } = req.body;
-    if (!formularioIds.length || !usuarioIds.length) {
-      return res.status(400).json({ error: 'Debe enviar arrays de usuarioIds y formularioIds' });
+    if (!Array.isArray(formularioIds) || !formularioIds.length ||
+        !Array.isArray(usuarioIds) || !usuarioIds.length) {
+      return res.status(400).json({ error: 'Debe enviar arrays no vacíos de usuarioIds y formularioIds' });
     }
-
     const tenantId = req.user.tenantId;
     const asignaciones = [];
-
     for (const formularioId of formularioIds) {
       for (const usuarioId of usuarioIds) {
         asignaciones.push({
@@ -152,7 +156,6 @@ export const asignarFormularios = async (req, res) => {
         });
       }
     }
-
     const insertados = await AsignacionFormulario.insertMany(asignaciones, { ordered: false });
     res.status(201).json({
       mensaje: 'Asignaciones realizadas con éxito',
