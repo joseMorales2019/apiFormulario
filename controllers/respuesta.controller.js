@@ -40,3 +40,25 @@ export const eliminarRespuesta = async (req, res) => {
   if (!r) return res.status(404).json({ error: 'No existe o no acceso' });
   res.json({ mensaje: 'Respuesta eliminada' });
 };
+// respuesta.controller.js (agregar al final o donde sea adecuado)
+export const actualizarRespuestasSeleccionadas = async (req, res) => {
+  try {
+    const respuestas = req.body; // Array con respuestas a actualizar [{ _id, ...}]
+    if (!Array.isArray(respuestas) || respuestas.length === 0) {
+      return res.status(400).json({ error: 'Se requiere un array no vacío de respuestas para actualizar.' });
+    }
+
+    const updates = respuestas.map(r =>
+      RespuestaFormulario.findOneAndUpdate(
+        { _id: r._id, tenantId: req.user.tenantId },
+        r,
+        { new: true }
+      )
+    );
+
+    const resultados = await Promise.all(updates);
+    res.json({ mensaje: 'Respuestas actualizadas', resultados });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar respuestas seleccionadas', detalle: error.message });
+  }
+};
