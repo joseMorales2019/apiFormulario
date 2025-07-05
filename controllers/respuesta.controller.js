@@ -63,7 +63,7 @@ export const eliminarRespuesta = async (req, res) => {
 
 export const actualizarRespuestasSeleccionadas = async (req, res) => {
   try {
-    const respuestas = req.body; // Array con respuestas a actualizar [{ _id, ...}]
+    const respuestas = req.body;
     if (!Array.isArray(respuestas) || respuestas.length === 0) {
       return res.status(400).json({ error: 'Se requiere un array no vacío de respuestas para actualizar.' });
     }
@@ -80,7 +80,7 @@ export const actualizarRespuestasSeleccionadas = async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar respuestas seleccionadas', detalle: error.message });
   }
 };
-// Eliminar múltiples respuestas seleccionadas
+
 export const eliminarRespuestasSeleccionadas = async (req, res) => {
   try {
     const { ids } = req.body;
