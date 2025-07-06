@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import './models/user.model.js';
 
 // 🧩 Rutas
 import respuestaRoutes from './routes/respuesta.routes.js';
